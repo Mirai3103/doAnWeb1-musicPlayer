@@ -1,0 +1,163 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer components {
+    body {
+        font-family: "Nunito", sans-serif;
+    }
+
+    .menu-scroll::-webkit-scrollbar {
+        width: 3px;
+        background-color: transparent;
+    }
+    .menu-scroll::-webkit-scrollbar-track {
+        height: 4px;
+        background: transparent;
+        margin-top: 100px;
+        margin-bottom: 100px;
+    }
+    .menu-scroll::-webkit-scrollbar-thumb {
+        height: 4px;
+        background: #8338ec;
+    }
+    .menu-scroll::-webkit-scrollbar-track-piece:end {
+        background: transparent;
+        margin-bottom: 100px;
+    }
+    .menu-scroll::-webkit-scrollbar-track-piece:start {
+        background: transparent;
+        margin-top: 100px;
+    }
+    .nav-item {
+        cursor: pointer;
+        align-items: center;
+        display: flex;
+    }
+    .nav-item:hover {
+        cursor: pointer;
+        color: #8338ec;
+    }
+    .nav-item.nav-item-active {
+        cursor: pointer;
+        color: #8338ec;
+    }
+}
+
+/* #playing-process::before {
+  content: "";
+  position: absolute;
+  width: 33%;
+  top: -1.5px;
+  z-index: 10;
+  height: 6px;
+  background-color: #2b2d42;
+  border: 1px solid #2b2d42;
+  border-radius: 4px;
+  left: 0;
+} */
+
+#playping-process,
+#process-point,
+#volume-process,
+#volume-point {
+    height: 4px;
+}
+#process-bar:hover #playping-process,
+#volume-bar:hover #volume-process {
+    transform: scale(1, 1.25);
+}
+
+#process-bar:hover #process-point::before,
+#volume-bar:hover #volume-point::before {
+    content: "";
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 999px;
+    background-color: #48cae4;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+
+    transform: translate(50%, -50%);
+}
+#process-bar-line,
+#volume-bar-line {
+    height: 4px;
+}
+
+/* animation */
+@keyframes quiet {
+    25% {
+        transform: scaleY(0.6);
+    }
+    50% {
+        transform: scaleY(0.4);
+    }
+    75% {
+        transform: scaleY(0.8);
+    }
+}
+
+@keyframes normal {
+    25% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(0.4);
+    }
+    75% {
+        transform: scaleY(0.6);
+    }
+}
+@keyframes loud {
+    25% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(0.4);
+    }
+    75% {
+        transform: scaleY(1.2);
+    }
+}
+
+.waveContainer {
+    display: flex;
+    justify-content: space-between;
+    height: 20px;
+    --boxSize: 2px;
+    --gutter: 2px;
+    width: calc((var(--boxSize) + var(--gutter)) * 5);
+}
+
+.wave {
+    transform: scaleY(0.4);
+    height: 100%;
+    width: var(--boxSize);
+    background: #2ae212;
+    animation-duration: 1.2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    border-radius: 8px;
+}
+
+.wave1 {
+    animation-name: quiet;
+}
+
+.wave2 {
+    animation-name: normal;
+}
+
+.wave3 {
+    animation-name: quiet;
+}
+
+.wave4 {
+    animation-name: loud;
+}
+
+.wave5 {
+    animation-name: quiet;
+}

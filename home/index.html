@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vite App</title>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
+    </head>
+
+    <body>
+        <div class="w-screen h-screen flex relative">
+            <div
+                class="fixed w-screen h-20 bg-[#8338ec] justify-between px-5 font-normal bottom-0 left-0 shadow-slate-400 shadow-md flex items-center text-white"
+            >
+                <div id="track-descrption" class="flex items-center gap-x-3">
+                    <div class="w-12 h-12 flex items-center">
+                        <img
+                            src="https://res.cloudinary.com/dkvga054t/image/upload/v1668262394/songImage/serapine_qvdyqb.jpg"
+                            alt="image"
+                            class="object-cover w-full h-full rounded-md"
+                        />
+                    </div>
+                    <div class="flex flex-col gap-y-1">
+                        <div class="text-sm leading-5">Childhood dreams</div>
+                        <div class="text-xs leading-4">Serapine</div>
+                    </div>
+                </div>
+                <div class="flex flex-col h-full justify-evenly">
+                    <div class="flex items-center justify-center gap-x-7 text-2xl">
+                        <div class="cursor-pointer" id="pre-song-btn">
+                            <!-- <img src="./src/assets/icons/rewind.svg" alt="rewind" class="w-8 h-8" /> -->
+                            <i class="fa-solid fa-backward"></i>
+                        </div>
+                        <div
+                            class="w-10 h-10 text-[#8338ec] rounded-lg bg-white flex items-center justify-center cursor-pointer"
+                            id="play-btn"
+                        >
+                            <!-- <img src="./src/assets/icons/play.svg" alt="play" class="w-8 h-8 text-[#D9D9D9]" /> -->
+                            <i class="fa-solid fa-play"></i>
+                        </div>
+                        <div class="cursor-pointer" id="next-song-btn">
+                            <!-- <img src="./src/assets/icons/forward.svg" alt="forward" class="w-8 h-8" /> -->
+                            <i class="fa-solid fa fa-forward"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-x-8">
+                        <span class="font-light text-xs" id="currentTime">2:23</span>
+                        <div class="w-96 relative cursor-pointer" id="process-bar">
+                            <div id="process-bar-line" class="border rounded-sm bg-[#caf0f8] border-[#caf0f8]">
+                                <div class="w-full mx-auto">
+                                    <div
+                                        id="playping-process"
+                                        class="absolute top-0 z-10 bg-[#48cae4] border border-[#48cae4] rounded-sm left-0"
+                                        style="width: 6%"
+                                    ></div>
+                                    <div
+                                        id="process-point"
+                                        class="absolute top-0 z-10 bg-[#48cae4] border border-[#48cae4] rounded-sm left-0"
+                                        style="width: 6%"
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="font-light text-xs" id="maxTime">3:23</span>
+                    </div>
+                </div>
+                <div class="flex gap-x-3 items-center">
+                    <div><i class="fa-solid fa fa-bars"></i></div>
+                    <div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            fill="currentColor"
+                            class="bi bi-volume-up-fill"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"
+                            />
+                            <path
+                                d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"
+                            />
+                            <path
+                                d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"
+                            />
+                        </svg>
+                    </div>
+                    <div class="w-28 relative cursor-pointer" id="volume-bar">
+                        <div id="volume-bar-line" class="border rounded-sm bg-[#caf0f8] border-[#caf0f8]">
+                            <div class="w-full mx-auto">
+                                <div
+                                    id="volume-process"
+                                    class="absolute top-0 z-10 bg-[#48cae4] border border-[#48cae4] rounded-sm left-0"
+                                    style="width: 6%"
+                                ></div>
+                                <div
+                                    id="volume-point"
+                                    class="absolute top-0 z-10 bg-[#48cae4] border border-[#48cae4] rounded-sm left-0"
+                                    style="width: 6%"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="h-screen menu-scroll overflow-y-scroll flex flex-col w-[300px] text-base bg-white pl-10 gap-y-11 font-medium"
+            >
+                <div class="mt-3">
+                    <h1 class="text-3xl">Logo</h1>
+                </div>
+
+                <div class="flex flex-col gap-y-3">
+                    <h2 class="uppercase mb-2 mt-0 text-lg text-[#909090]">Menu</h2>
+                    <div class="nav-item gap-x-2 ml-4 nav-item-active"><i class="fa fa-light fa-globe"></i>Explore</div>
+                    <div class="nav-item gap-x-2 ml-4"><i class="fa-light fa fa-volume-high"></i>Genres</div>
+                    <div class="nav-item gap-x-2 ml-4"><i class="fa-solid fa fa-album"></i>Albums</div>
+                    <div class="nav-item gap-x-2 ml-4"><i class="fa-light fa fa-radio"></i>Radio</div>
+                </div>
+                <div class="flex flex-col gap-y-3">
+                    <h2 class="uppercase my-2 text-lg text-[#909090]">Library</h2>
+                    <div class="nav-item gap-x-2 ml-4"><i class="fa-light fa fa-rotate-left"></i>Recent</div>
+                    <div class="nav-item gap-x-2 ml-4"><i class="fa-light fa fa-heart"></i>Favorites</div>
+                    <div class="nav-item gap-x-2 ml-4"><i class="fa-light fa fa-laptop"></i>Local</div>
+                </div>
+                <div class="flex flex-col gap-y-3">
+                    <h2 class="uppercase my-2 text-lg text-[#909090]">Playlist</h2>
+                    <div class="nav-item gap-x-2 ml-4"><i class="fa-regular fa fa-circle-play"></i>Best of 2022</div>
+                    <div class="nav-item gap-x-2 ml-4"><i class="fa-regular fa fa-circle-play"></i>Create new</div>
+                </div>
+            </div>
+            <div class="h-screen max-h-screen overflow-hidden w-full bg-[#f8f8f8]">
+                <div class="overflow-y-auto -mr-[17px] box-content h-full">
+                    <header class="w-full mt-3">
+                        <nav class="w-full flex justify-between items-center px-4">
+                            <ul class="flex text-2xl">
+                                <li class="nav-item">
+                                    <i class="fa-sharp fa fa-solid fa-chevron-left cursor-pointer"></i>
+                                </li>
+                                <li class="nav-item">
+                                    <i
+                                        class="fa-sharp fa fa-solid fa-chevron-right cursor-pointer"
+                                        style="color: #909090"
+                                    ></i>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li
+                                    class="border-2 flex items-center font-medium text-sm rounded-full px-1 py-1 border-[#8D99AE]"
+                                >
+                                    <i class="fa-sharp fa fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" class="outline-none mx-1 bg-transparent" placeholder="search" />
+                                </li>
+                            </ul>
+                            <ul class="flex justify-between basis-64">
+                                <li class="nav-item nav-item-active">Music</li>
+                                <li class="nav-item">Top charts</li>
+                                <li class="nav-item">Podcasts</li>
+                            </ul>
+                            <ul class="flex items-center justify-between basis-64">
+                                <li class="nav-item"><i class="fa-thin fa fa-toolbox"></i></li>
+                                <li class="nav-item"><i class="fa-thin fa fa-gear"></i></li>
+                                <li class="nav-item">Hữu Hoàng <i class="fa-solid fa-caret-down"></i></li>
+                                <li class="border-2 p-1 border-[#8338ec] rounded-full w-12 h-12">
+                                    <img
+                                        class="rounded-full w-full"
+                                        src="https://scontent.fsgn5-12.fna.fbcdn.net/v/t39.30808-6/308764491_1597511833980335_873943372663737518_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=THn7MRC_AyIAX-YV46q&_nc_oc=AQndfpVxa2dv33RgKVAVPp0QSmynCYDB0pt_79sPl8Dlm4tk34sKsZGf9vxE2fG0390&_nc_ht=scontent.fsgn5-12.fna&oh=00_AT9eo4ThCwJ8K32yNNi_g6C9XvDPMEeKJo3743aYYBb8Qw&oe=63442381"
+                                        alt="avatart"
+                                    />
+                                </li>
+                            </ul>
+                        </nav>
+                    </header>
+                    <div class="flex w-full justify-center mt-6">
+                        <div class="py-1 px-7 hover:bg-slate-300 rounded-md font-medium">
+                            <div class="">
+                                <img
+                                    src="./src/assets/serapine.jpg"
+                                    alt="momo"
+                                    style="max-height: 132px; width: 124px"
+                                    class="rounded-lg"
+                                />
+                            </div>
+                            <div class="text-lg mt-3">Waiting for you</div>
+                            <div class="text-xs mt-1 text-[#909090]">Mono</div>
+                        </div>
+                        <div class="py-1 px-7 hover:bg-slate-300 rounded-md font-medium">
+                            <div class="">
+                                <img
+                                    src="./src/assets/serapine.jpg"
+                                    alt="momo"
+                                    style="max-height: 132px; width: 124px"
+                                    class="rounded-lg"
+                                />
+                            </div>
+                            <div class="text-lg mt-3">Waiting for you</div>
+                            <div class="text-xs mt-1 text-[#909090]">Mono</div>
+                        </div>
+                        <div class="py-1 px-7 hover:bg-slate-300 rounded-md font-medium">
+                            <div class="">
+                                <img
+                                    src="./src/assets/serapine.jpg"
+                                    alt="momo"
+                                    style="max-height: 132px; width: 124px"
+                                    class="rounded-lg"
+                                />
+                            </div>
+                            <div class="text-lg mt-3">Waiting for you</div>
+                            <div class="text-xs mt-1 text-[#909090]">Mono</div>
+                        </div>
+                        <div class="py-1 px-7 hover:bg-slate-300 rounded-md font-medium">
+                            <div class="">
+                                <img
+                                    src="./src/assets/serapine.jpg"
+                                    alt="momo"
+                                    style="max-height: 132px; width: 124px"
+                                    class="rounded-lg"
+                                />
+                            </div>
+                            <div class="text-lg mt-3">Waiting for you</div>
+                            <div class="text-xs mt-1 text-[#909090]">Mono</div>
+                        </div>
+                        <div class="py-1 px-7 hover:bg-slate-300 rounded-md font-medium">
+                            <div class="">
+                                <img
+                                    src="./src/assets/serapine.jpg"
+                                    alt="momo"
+                                    style="max-height: 132px; width: 124px"
+                                    class="rounded-lg"
+                                />
+                            </div>
+                            <div class="text-lg mt-3">Waiting for you</div>
+                            <div class="text-xs mt-1 text-[#909090]">Mono</div>
+                        </div>
+                        <div class="py-1 px-7 hover:bg-slate-300 rounded-md font-medium">
+                            <div class="">
+                                <img
+                                    src="./src/assets/serapine.jpg"
+                                    alt="momo"
+                                    style="max-height: 132px; width: 124px"
+                                    class="rounded-lg"
+                                />
+                            </div>
+                            <div class="text-lg mt-3">Waiting for you</div>
+                            <div class="text-xs mt-1 text-[#909090]">Mono</div>
+                        </div>
+                    </div>
+                    <div class="flex font-medium mt-10 justify-around">
+                        <div id="trending" class="basis-[710px] shadow-md">
+                            <div class="bg-white h-[404px] py-6 px-5 flex flex-col gap-y-2">
+                                <div class="flex text-xs items-center w-full gap-x-8 mb-2">
+                                    <div class="text-[#2B2D42] text-lg">Trending now</div>
+                                    <div class="flex gap-x-3 h-5">
+                                        <div
+                                            class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer nav-item-active"
+                                        >
+                                            Today
+                                        </div>
+                                        <div
+                                            class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer"
+                                        >
+                                            Week
+                                        </div>
+                                        <div
+                                            class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer"
+                                        >
+                                            Month
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="trendingsong" class="flex flex-col gap-y-2 h-[312px] overflow-y-scroll"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-1/2"></div>
+                    <div class="h-1/2"></div>
+                </div>
+            </div>
+            <script src="https://unpkg.com/feather-icons"></script>
+            <script src="https://kit.fontawesome.com/2d8af150bf.js" crossorigin="anonymous"></script>
+            <script type="module" src="/src/scripts/main.ts"></script>
+        </div>
+    </body>
+</html>

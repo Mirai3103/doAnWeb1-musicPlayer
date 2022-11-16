@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Waiting for you",
+        "singer": "Momo",
+        "audioSrc": "/src/assets/mp3/mono-waitingforyou.mp3",
+        "imageSrc": "/src/assets/mono.jpg"
+    },
+    {
+        "name": "Cánh cửa và người đàn ông",
+        "singer": "Seachain",
+        "audioSrc": "/src/assets/mp3/canh-cua-va-nguoi-dan-ong.mp3",
+        "imageSrc": "/src/assets/seachain.jpg"
+    },
+    {
+        "name": "Racing into the night",
+        "singer": "Yoasobi",
+        "audioSrc": "/src/assets/mp3/racingintothenight.mp3",
+        "imageSrc": "/src/assets/yoasobi.jpg"
+    },
+    {
+        "name": "There's no one at all",
+        "singer": "Sơn Tùng MTP",
+        "audioSrc": "/src/assets/mp3/therenooneatall.mp3",
+        "imageSrc": "/src/assets/mtp.jpg"
+    }
+]
