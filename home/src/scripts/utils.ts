@@ -18,7 +18,7 @@ export const getTotalTimeFromMp3Url = async (url: string) => {
     // clear memory
     return covertTime(time as number);
 };
-const covertTime = (time: number) => {
+export const covertTime = (time: number) => {
     let mins: string | number = Math.floor(time / 60);
     if (mins < 10) {
         mins = "0" + String(mins);

@@ -35,8 +35,15 @@ const getTotalTime = async (song: Track) => {
     fs.unlinkSync("./temp/" + song.id + ".mp3");
     song.totalTime = duration;
 };
+// const main = async () => {
+//     for (let i = 0; i < songs.length; i++) {
+//         await getTotalTime(songs[i]);
+//     }
+//     console.log(errorIds);
+//     fs.writeFileSync("./songs2.json", JSON.stringify(songs));
+// };
 const main = async () => {
     const random20 = songs.sort(() => Math.random() - 0.5).slice(0, 20);
-    fs.writeFileSync("./random20.json", JSON.stringify(random20, null, 4));
+    fs.writeFileSync("./tredingMonth.json", JSON.stringify(random20, null, 4));
 };
 main();
