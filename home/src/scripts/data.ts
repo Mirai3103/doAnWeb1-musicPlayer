@@ -1,38 +1,43 @@
 import { Track } from "./AudioPlayer";
-export const trendingSongs: Track[] = [
+interface IArtist {
+    name: string;
+    url: string;
+}
+export const favoriteArtists: IArtist[] = [
     {
-        id: 1,
-        name: "Waiting for you",
-        artistName: "Momo",
-        url: "https://res.cloudinary.com/dkvga054t/video/upload/v1668260311/mp3/waiting-for-you_mono_pvmpto.mp3",
-        thumbnailUrl: "https://res.cloudinary.com/dkvga054t/image/upload/v1668262392/songImage/mono_r3ab8o.jpg",
+        name: "Mono",
+        url: "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/8/e/6/2/8e62fe317658a5c4fc4db6f2f5c75a62.jpg",
     },
     {
-        id: 2,
-        name: "Cánh cửa và người đàn ông",
-        artistName: "Seachain",
-        url: "https://res.cloudinary.com/dkvga054t/video/upload/v1668260311/mp3/canh-cua-va-nguoi-dan-ong_seachain_r5edgm.mp3",
-        thumbnailUrl: "https://res.cloudinary.com/dkvga054t/image/upload/v1668262396/songImage/seachain_aqcvlz.jpg",
+        name: "Sơn Tùng M-TP",
+        url: "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/8/a/a/b/8aab7a0386dd9c24b90adcc5ef5a7814.jpg",
     },
     {
-        id: 3,
-        name: "Racing into the night",
-        artistName: "Yoasobi",
-        url: "https://res.cloudinary.com/dkvga054t/video/upload/v1668260313/mp3/racing-into-the-night_jwu7nw.mp3",
-        thumbnailUrl: "https://res.cloudinary.com/dkvga054t/image/upload/v1668262394/songImage/yoasobi_pey1em.jpg",
+        name: "Phan Mạnh Quỳnh",
+        url: "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/1/6/a/d/16ad38a571e873f840bbfc0d97214baa.jpg",
     },
     {
-        id: 4,
-        name: "Childhood Dreams",
-        artistName: "Seraphine",
-        url: "/src/assets/mp3/therenooneatall.mp3",
-        thumbnailUrl: "https://res.cloudinary.com/dkvga054t/image/upload/v1668262394/songImage/serapine_qvdyqb.jpg",
+        name: "Lou Hoàng",
+        url: "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/3/1/d/0/31d0f0e35548bd22f2f0e962eabf3c48.jpg",
     },
     {
-        id: 5,
-        name: "There's no one at all",
-        artistName: "Sơn Tùng MTP",
-        url: "https://res.cloudinary.com/dkvga054t/video/upload/v1668262706/mp3/Childhood_dream_-_Seraphine_wjyqxx.mp3",
-        thumbnailUrl: "https://res.cloudinary.com/dkvga054t/image/upload/v1668262392/songImage/mtp_eklxwr.jpg",
+        name: "B Ray",
+        url: "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/6/5/1/9/651942a9fe205c76b3821246af5d6742.jpg",
+    },
+    {
+        name: "Binz",
+        url: "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/4/8/9/1/4891c7eef87e3ac85a50a2fba2674f5a.jpg",
+    },
+    {
+        name: "AMEE",
+        url: "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/9/8/4/d/984de8b3596498462d5f954eadbb1f47.jpg",
+    },
+    {
+        name: "Tuấn Hưng",
+        url: "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/3/e/0/6/3e06ae7740102e7662db8cbca392d9a6.jpg",
+    },
+    {
+        name: "Đen",
+        url: "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg",
     },
 ];
