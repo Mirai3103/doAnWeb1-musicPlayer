@@ -56,12 +56,19 @@ const recentlyAddedElement = document.getElementById("recently-added")!;
                                         </div>
 */
 const renderRecentlyAdded = async () => {
-    const url = "https://raw.githubusercontent.com/Mirai3103/nodeWeb1/main/generateData/songs.json";
+    const url = "https://raw.githubusercontent.com/Mirai3103/nodeWeb1/main/generateData/recentlyAdded.json";
     const response = await (await fetch(url)).json();
-    const songs = generateRandomArray(response, 20);
+    const songs = response;
 
     for (let i = 0; i < songs.length; i++) {
         const song = songs[i];
+        let timeSrc = "";
+        try {
+            timeSrc = await getTotalTimeFromMp3Url(song.url);
+        } catch (e) {
+            continue;
+            console.log(e);
+        }
         const songElement = createElementFromHTML(`
             <div class="grid grid-cols-10 font-normal text-sm hover:text-[#8338ec] hover:bg-slate-50 py-1 cursor-pointer">
                 <div class="col-span-1 grid place-content-center">${
@@ -79,7 +86,7 @@ const renderRecentlyAdded = async () => {
                     </div>
                     <div class="font-bold text-ellipsis whitespace-nowrap overflow-hidden">${song.name}</div>
                 </div>
-                <div class="col-span-2 grid place-content-center">${await getTotalTimeFromMp3Url(song.url)}</div>
+                <div class="col-span-2 grid place-content-center">${timeSrc}</div>
                 <div class="col-span-3 grid place-content-center text-ellipsis whitespace-nowrap overflow-hidden">${
                     song.artistName
                 }</div>

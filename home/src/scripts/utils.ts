@@ -11,10 +11,11 @@ export const getTotalTimeFromMp3Url = async (url: string) => {
     const time = await new Promise((resolve) => {
         audio.addEventListener("loadedmetadata", () => {
             resolve(audio.duration);
+            URL.revokeObjectURL(audio.src);
         });
     });
+    console.log(url);
     // clear memory
-    URL.revokeObjectURL(audio.src);
     return covertTime(time as number);
 };
 const covertTime = (time: number) => {

@@ -6,6 +6,8 @@ export class Track {
     public genre?: string | undefined;
     public thumbnailUrl?: string | undefined;
     public artistImgUrl?: string | undefined;
+    public totalTime: number = 0;
+
     constructor(
         name: string,
         url: string,
