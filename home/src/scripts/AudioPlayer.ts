@@ -1,5 +1,5 @@
 export class Track {
-    public id: number = 0;
+    public id: number | string = "";
     public name: string;
     public url: string;
     public artistName: string;
@@ -36,26 +36,24 @@ export class TrackNode {
 
 export default class AudioPlayer {
     public audio: HTMLAudioElement;
-    public currentTrack: Track | null;
-    public trackList: TrackNode | null;
+    public currentTrackIndex: number = 0;
+    public trackList: Track[] = [];
     public isPlaying: boolean;
     public isRepeat: boolean;
     public isMute: boolean;
+    public isShuffle: boolean = false;
     public volume: number;
-    public currentTrackNode: TrackNode | null;
     private trackEndEvent: ((e: Event) => void)[] = [];
     private trackPauseEvent: ((e: Event) => void)[] = [];
     private trackStartEvent: ((e: Event) => void)[] = [];
     private trackPlayingEvent: ((e: Event) => void)[] = [];
     constructor(audio: HTMLAudioElement) {
         this.audio = audio;
-        this.currentTrack = null;
-        this.trackList = null;
+
         this.isPlaying = false;
         this.isRepeat = false;
         this.isMute = false;
         this.volume = 1;
-        this.currentTrackNode = null;
         this.initEvent();
     }
     private initEvent() {
@@ -63,6 +61,7 @@ export default class AudioPlayer {
             this.trackEndEvent.forEach((callback) => {
                 callback(e);
             });
+            this.moveToNextTrack();
         });
         this.audio.addEventListener("pause", (e) => {
             this.trackPauseEvent.forEach((callback) => {
@@ -79,12 +78,33 @@ export default class AudioPlayer {
                 callback(e);
             });
         });
+        this.audio.addEventListener("timeupdate", (e) => {
+            this.trackPlayingEvent.forEach((callback) => {
+                callback(e);
+            });
+        });
     }
     public play() {
+        console.log(this.audio);
+        console.log(this.trackList);
+        console.log(this.audio.getAttribute("src"), "ok");
+        if (this.audio.getAttribute("src") == "#") {
+            if (this.trackList.length > 0) {
+                this.audio.src = this.trackList[this.currentTrackIndex].url;
+                this.audio.load();
+                this.audio.play();
+            }
+            return;
+        }
         this.audio.play();
         this.isPlaying = true;
     }
-
+    public setCurrentTime(time: number) {
+        this.audio.currentTime = time;
+    }
+    public getDuration() {
+        return this.audio.duration;
+    }
     public pause() {
         this.audio.pause();
         this.isPlaying = false;
@@ -113,33 +133,60 @@ export default class AudioPlayer {
 
     public setTrack(track: Track) {
         this.audio.src = track.url;
-        this.currentTrack = track;
+        this.audio.load();
+        this.trackList.push(track);
+        this.currentTrackIndex = this.trackList.length - 1;
     }
 
-    public setTrackList(trackList: TrackNode) {
+    public setTrackList(trackList: Track[]) {
         this.trackList = trackList;
     }
 
-    public nextTrack() {
-        if (this.currentTrackNode) {
-            if (this.currentTrackNode.next) {
-                this.currentTrackNode = this.currentTrackNode.next;
-                this.setTrack(this.currentTrackNode.track);
+    public moveToNextTrack() {
+        if (this.currentTrackIndex < this.trackList.length - 1) {
+            if (this.isShuffle) {
+                this.currentTrackIndex = Math.floor(Math.random() * this.trackList.length);
+            } else {
+                this.currentTrackIndex++;
+            }
+            this.audio.src = this.trackList[this.currentTrackIndex].url;
+            this.audio.load();
+            this.play();
+        } else {
+            if (this.isRepeat) {
+                if (this.isShuffle) {
+                    this.currentTrackIndex = Math.floor(Math.random() * this.trackList.length);
+                } else {
+                    this.currentTrackIndex = 0;
+                }
+                this.audio.src = this.trackList[this.currentTrackIndex].url;
+                this.audio.load();
+
                 this.play();
             } else {
                 this.stop();
             }
         }
     }
+    public addTrack(track: Track) {
+        this.trackList.push(track);
+    }
 
-    public prevTrack() {
-        if (this.currentTrackNode) {
-            if (this.currentTrackNode.next) {
-                this.currentTrackNode = this.currentTrackNode.next;
-                this.setTrack(this.currentTrackNode.track);
+    public getCurrentTrack() {
+        return this.trackList[this.currentTrackIndex];
+    }
+    public moveToPrevTrack() {
+        if (this.currentTrackIndex > 0) {
+            this.currentTrackIndex--;
+            this.audio.src = this.trackList[this.currentTrackIndex].url;
+            this.play();
+        } else {
+            if (this.isRepeat) {
+                this.currentTrackIndex = this.trackList.length - 1;
+                this.audio.src = this.trackList[this.currentTrackIndex].url;
                 this.play();
             } else {
-                this.stop();
+                this.audio.currentTime = 0;
             }
         }
     }

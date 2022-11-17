@@ -16,6 +16,7 @@
             <div
                 class="fixed z-50 w-screen h-20 bg-[#8338ec] justify-between px-5 font-normal bottom-0 left-0 shadow-slate-400 shadow-md flex items-center text-white"
             >
+                <audio id="audio-element" src="#" hidden></audio>
                 <div id="track-descrption" class="flex items-center gap-x-3">
                     <div class="w-12 h-12 flex items-center">
                         <img
@@ -31,6 +32,9 @@
                 </div>
                 <div class="flex flex-col h-full justify-evenly">
                     <div class="flex items-center justify-center gap-x-7 text-2xl">
+                        <div class="cursor-pointer text-lg" id="shuffe">
+                            <i class="fa-solid fa-shuffle"></i>
+                        </div>
                         <div class="cursor-pointer" id="pre-song-btn">
                             <!-- <img src="./src/assets/icons/rewind.svg" alt="rewind" class="w-8 h-8" /> -->
                             <i class="fa-solid fa-backward"></i>
@@ -46,9 +50,12 @@
                             <!-- <img src="./src/assets/icons/forward.svg" alt="forward" class="w-8 h-8" /> -->
                             <i class="fa-solid fa fa-forward"></i>
                         </div>
+                        <div class="cursor-pointer text-lg text-green-400" id="loop">
+                            <i class="fa-solid fa-repeat"></i>
+                        </div>
                     </div>
                     <div class="flex items-center gap-x-8">
-                        <span class="font-light text-xs" id="currentTime">2:23</span>
+                        <span class="font-light text-xs" id="current-time">2:23</span>
                         <div class="w-96 relative cursor-pointer" id="process-bar">
                             <div id="process-bar-line" class="border rounded-sm bg-[#caf0f8] border-[#caf0f8]">
                                 <div class="w-full mx-auto">
@@ -65,7 +72,7 @@
                                 </div>
                             </div>
                         </div>
-                        <span class="font-light text-xs" id="maxTime">3:23</span>
+                        <span class="font-light text-xs" id="max-time">3:23</span>
                     </div>
                 </div>
                 <div class="flex gap-x-3 items-center">

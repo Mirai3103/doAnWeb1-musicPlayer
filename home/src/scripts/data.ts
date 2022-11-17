@@ -41,3 +41,12 @@ export const favoriteArtists: IArtist[] = [
         url: "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg",
     },
 ];
+
+let listTrack: Track[] | null = null;
+fetch("https://raw.githubusercontent.com/Mirai3103/nodeWeb1/main/generateData/songs.json")
+    .then((res) => {
+        return res.json();
+    })
+    .then((data) => {
+        listTrack = [...data];
+    });
