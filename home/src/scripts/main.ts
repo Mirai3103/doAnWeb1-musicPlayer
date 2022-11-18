@@ -1,33 +1,10 @@
+import { renderTrendingSong } from "./trendingSong";
 import "../styles/tailwind.css";
-import { favoriteArtists } from "./data";
-import { createElementFromHTML, covertTime } from "./utils";
-import AudioPlayer from "./AudioPlayer";
-
-const favoriteArtistsElement = document.getElementById("favorite-artists")!;
-
-favoriteArtists.forEach((artist) => {
-    const artistElement = createElementFromHTML(`
-        <div class="flex justify-between cursor-pointer hover:bg-slate-100 px-4 py-1 rounded-md">
-                                        <div class="flex gap-x-3">
-                                            <div class="flex justify-center max-w-[50px] items-center">
-                                                <img
-                                                    class="object-fill rounded-lg flex-shrink-0 min-w-full min-h-full"
-                                                    src="${artist.url}"
-                                                    alt=""
-                                                />
-                                            </div>
-                                            <div>
-                                                <div class="text-base artistName">${artist.name}</div>
-                                                <div class="text-sm font-light text-gray-500">${Math.floor(
-                                                    Math.random() * 55 + 1
-                                                )}M plays</div>
-                                            </div>
-                                        </div>
-                                        <div class="font-bold text-3xl">...</div>
-                                    </div>
-    `);
-    favoriteArtistsElement.appendChild(artistElement!);
-});
+import "./favoriteAtists";
+import { createElementFromHTML, covertTime, formatNumber } from "./utils";
+import AudioPlayer, { Track } from "./AudioPlayer";
+import { getListTrack } from "./data";
+import { initQueueView } from "./queueView";
 
 const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null;
 if (user) {
@@ -36,18 +13,45 @@ if (user) {
 }
 
 const recentlyAddedElement = document.getElementById("recently-added")!;
+const handleSongClick = async (songId: string) => {
+    const songs = await getListTrack();
+    const song = songs.find((song) => song.id == songId);
+    if (song) {
+        audioPlayer.setTrack(song);
+    }
+};
+let recentSongs: Track[] | null = null;
+const renderRecentlyAdded = async (audioPlayer: AudioPlayer | null = null) => {
+    recentlyAddedElement.innerHTML = `<div class="flex justify-center items-center"><div class="loader"></div></div>`;
 
-const renderRecentlyAdded = async () => {
-    const url = "https://raw.githubusercontent.com/Mirai3103/nodeWeb1/main/generateData/recentlyAdded.json";
-    const response = await (await fetch(url)).json();
-    const songs = response;
+    if (!recentSongs) {
+        const url = "https://raw.githubusercontent.com/Mirai3103/nodeWeb1/main/generateData/recentlyAdded.json";
+        const response = await (await fetch(url)).json();
+        recentSongs = [...response];
+    }
+    const songs = recentSongs;
+    let currentTrackId: string | null = null;
+    if (audioPlayer) {
+        currentTrackId = audioPlayer.getCurrentTrack().id + "";
+    }
+    recentlyAddedElement.innerHTML = "";
 
     for (let i = 0; i < songs.length; i++) {
         const song = songs[i];
         const songElement = createElementFromHTML(`
-            <div class="grid grid-cols-10 font-normal text-sm hover:text-[#8338ec] hover:bg-slate-50 py-1 cursor-pointer">
-                <div class="col-span-1 grid place-content-center">${
-                    (i + 1 + "").length == 1 ? "0" + (i + 1) : i + 1
+            <div class="grid grid-cols-10 font-normal text-sm hover:text-[#8338ec] ${
+                currentTrackId === song.id ? "bg-slate-50 text-[#8338ec]" : ""
+            } hover:bg-slate-50 py-1 cursor-pointer">
+                <div class="col-span-1 grid place-content-center ">${
+                    currentTrackId === song.id
+                        ? `<div class="music-waves -ml-2 -mb-2">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>`
+                        : formatNumber(i + 1, 2)
                 }</div>
                 <div class="col-span-4 flex items-center gap-x-4 px-2">
                     <div
@@ -67,10 +71,12 @@ const renderRecentlyAdded = async () => {
                 }</div>
             </div>
         `);
+        songElement!.addEventListener("click", () => {
+            handleSongClick(song.id + "");
+        });
         recentlyAddedElement.appendChild(songElement!);
     }
 };
-renderRecentlyAdded();
 
 const audioElement = document.getElementById("audio-element") as HTMLAudioElement;
 const playBtn = document.getElementById("play-btn") as HTMLButtonElement;
@@ -81,6 +87,9 @@ const processPoint = document.getElementById("process-point") as HTMLDivElement;
 const processBar = document.getElementById("process-bar") as HTMLDivElement;
 const loopBtn = document.getElementById("loop") as HTMLButtonElement;
 const shuffleBtn = document.getElementById("shuffle") as HTMLButtonElement;
+const currentPlayImg = document.getElementById("current-play-img") as HTMLImageElement;
+const currentSongName = document.getElementById("current-song-name") as HTMLDivElement;
+const currentArtistName = document.getElementById("current-artist-name") as HTMLDivElement;
 const audioPlayer = new AudioPlayer(audioElement);
 const pauseIcon = `<i class="fa-solid fa-pause"></i>`;
 const playIcon = `<i class="fa-solid fa-play"></i>`;
@@ -107,9 +116,12 @@ shuffleBtn.addEventListener("click", () => {
 });
 audioPlayer.onTrackPause(() => {
     playBtn.innerHTML = playIcon;
+    renderTrendingSong(null, audioPlayer);
 });
 audioPlayer.onTrackStart(() => {
     playBtn.innerHTML = pauseIcon;
+    renderRecentlyAdded(audioPlayer);
+    renderTrendingSong(null, audioPlayer);
 });
 playBtn.addEventListener("click", handleTogglePlay);
 preSongBtn.addEventListener("click", () => {
@@ -132,10 +144,12 @@ const movePointOnPlaying = (e: any) => {
 };
 const hanldeTimeUpdate = (e: any) => {
     document.getElementById("current-time")!.innerHTML = covertTime(e.target.currentTime * 1000);
-    console.log(e);
 };
 const onPlay = () => {
     document.getElementById("max-time")!.innerHTML = covertTime(audioPlayer.getCurrentTrack().totalTime);
+    currentArtistName.innerHTML = audioPlayer.getCurrentTrack().artistName;
+    currentSongName.innerHTML = audioPlayer.getCurrentTrack().name;
+    currentPlayImg.src = audioPlayer.getCurrentTrack().thumbnailUrl!;
 };
 document.getElementById("process-bar-line")?.addEventListener("click", onProcessBarClick);
 document.getElementById("playping-process")?.addEventListener("click", onProcessBarClick);
@@ -143,18 +157,6 @@ document.getElementById("process-point")?.addEventListener("click", onProcessBar
 audioPlayer.onTrackPlaying(movePointOnPlaying);
 audioPlayer.onTrackPlaying(hanldeTimeUpdate);
 audioPlayer.onTrackStart(onPlay);
-
-audioPlayer.addTrack({
-    id: "ZZE87OEO",
-    name: "Không Quen",
-    url: "https://mp3-s1-m-zmp3.zmdcdn.me/41d6978343c2aa9cf3d3/5786213763934415881?authen=exp=1668776835~acl=/41d6978343c2aa9cf3d3/*~hmac=bfbe4764fc48ff2992064c0032d7c70f",
-    artistName: "B Ray",
-    thumbnailUrl:
-        "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/6/5/1/9/651942a9fe205c76b3821246af5d6742.jpg",
-    artistImgUrl:
-        "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/6/5/1/9/651942a9fe205c76b3821246af5d6742.jpg",
-    totalTime: 238080,
-});
 audioPlayer.addTrack({
     id: "ZZB8DB9U",
     name: "Way Back Home",
@@ -166,3 +168,22 @@ audioPlayer.addTrack({
         "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/6/5/1/9/651942a9fe205c76b3821246af5d6742.jpg",
     totalTime: 183824,
 });
+
+const volumeBar = document.getElementById("volume-bar") as HTMLDivElement;
+const volumeBarLine = document.getElementById("volume-bar-line") as HTMLDivElement;
+const volumeProcess = document.getElementById("volume-process") as HTMLDivElement;
+const volumePoint = document.getElementById("volume-point") as HTMLDivElement;
+const onVolumeBarClick = (e: any) => {
+    const MAX_PROCESS_WIDTH = volumeBar.offsetWidth;
+    const percentage = Number(e.offsetX) / Number(MAX_PROCESS_WIDTH);
+    const currentVolume = Number(percentage);
+    audioPlayer.setVolume(currentVolume);
+    volumeProcess.style.width = Math.floor(percentage * MAX_PROCESS_WIDTH) + "px";
+    volumePoint.style.width = Math.floor(percentage * MAX_PROCESS_WIDTH) + "px";
+};
+volumeBarLine.addEventListener("click", onVolumeBarClick);
+volumeProcess.addEventListener("click", onVolumeBarClick);
+volumePoint.addEventListener("click", onVolumeBarClick);
+renderRecentlyAdded();
+renderTrendingSong(null, audioPlayer);
+initQueueView(audioPlayer);

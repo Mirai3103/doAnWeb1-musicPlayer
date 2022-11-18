@@ -56,6 +56,9 @@ export default class AudioPlayer {
         this.volume = 1;
         this.initEvent();
     }
+    public getRemainingTracks() {
+        return this.trackList.slice(this.currentTrackIndex + 1);
+    }
     private initEvent() {
         this.audio.addEventListener("ended", (e) => {
             this.trackEndEvent.forEach((callback) => {
@@ -67,11 +70,13 @@ export default class AudioPlayer {
             this.trackPauseEvent.forEach((callback) => {
                 callback(e);
             });
+            this.isPlaying = false;
         });
         this.audio.addEventListener("play", (e) => {
             this.trackStartEvent.forEach((callback) => {
                 callback(e);
             });
+            this.isPlaying = true;
         });
         this.audio.addEventListener("playing", (e) => {
             this.trackPlayingEvent.forEach((callback) => {
@@ -84,10 +89,14 @@ export default class AudioPlayer {
             });
         });
     }
+    public togglePlay() {
+        if (this.isPlaying) {
+            this.pause();
+        } else {
+            this.play();
+        }
+    }
     public play() {
-        console.log(this.audio);
-        console.log(this.trackList);
-        console.log(this.audio.getAttribute("src"), "ok");
         if (this.audio.getAttribute("src") == "#") {
             if (this.trackList.length > 0) {
                 this.audio.src = this.trackList[this.currentTrackIndex].url;
@@ -132,10 +141,11 @@ export default class AudioPlayer {
     }
 
     public setTrack(track: Track) {
-        this.audio.src = track.url;
-        this.audio.load();
         this.trackList.push(track);
         this.currentTrackIndex = this.trackList.length - 1;
+        this.audio.src = track.url;
+        this.audio.load();
+        this.play();
     }
 
     public setTrackList(trackList: Track[]) {

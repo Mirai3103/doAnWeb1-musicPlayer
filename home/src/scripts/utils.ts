@@ -14,7 +14,6 @@ export const getTotalTimeFromMp3Url = async (url: string) => {
             URL.revokeObjectURL(audio.src);
         });
     });
-    console.log(url);
     // clear memory
     return covertTime(time as number);
 };
@@ -44,7 +43,16 @@ export const generateRandomArray = (src: any[], length: number) => {
         } while (arr.find((item) => item.id == src[randomIndex].id));
         arr.push(src[randomIndex]);
     }
-    console.log(JSON.stringify(arr));
 
     return arr;
+};
+
+export const formatNumber = (num: number, numberOfMaxDigit: number) => {
+    //12 => 0012
+    //123 => 0123
+    let str = num + "";
+    while (str.length < numberOfMaxDigit) {
+        str = "0" + str;
+    }
+    return str;
 };

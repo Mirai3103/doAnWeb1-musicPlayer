@@ -7,6 +7,9 @@ module.exports = {
             colors: {
                 "white-blur": "#F2F5F5",
             },
+            width: {
+                queue: "300px",
+            },
         },
     },
     plugins: [],

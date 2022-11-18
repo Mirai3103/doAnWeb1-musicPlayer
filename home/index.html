@@ -4,15 +4,15 @@
         <meta charset="UTF-8" />
         <link rel="icon" type="image/svg+xml" href="/vite.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Vite App</title>
+        <title>Music player</title>
         <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         />
     </head>
 
-    <body>
-        <div class="w-screen h-screen flex relative">
+    <body class="overflow-hidden">
+        <div class="w-screen h-screen flex relative" class="overflow-hidden">
             <div
                 class="fixed z-50 w-screen h-20 bg-[#8338ec] justify-between px-5 font-normal bottom-0 left-0 shadow-slate-400 shadow-md flex items-center text-white"
             >
@@ -20,19 +20,20 @@
                 <div id="track-descrption" class="flex items-center gap-x-3">
                     <div class="w-12 h-12 flex items-center">
                         <img
+                            id="current-play-img"
                             src="https://res.cloudinary.com/dkvga054t/image/upload/v1668262394/songImage/serapine_qvdyqb.jpg"
                             alt="image"
                             class="object-cover w-full h-full rounded-md"
                         />
                     </div>
                     <div class="flex flex-col gap-y-1">
-                        <div class="text-sm leading-5">Childhood dreams</div>
-                        <div class="text-xs leading-4">Serapine</div>
+                        <div id="current-song-name" class="text-sm leading-5">Childhood dreams</div>
+                        <div id="current-artist-name" class="text-xs leading-4">Serapine</div>
                     </div>
                 </div>
                 <div class="flex flex-col h-full justify-evenly">
                     <div class="flex items-center justify-center gap-x-7 text-2xl">
-                        <div class="cursor-pointer text-lg" id="shuffe">
+                        <div class="cursor-pointer text-lg" id="shuffle">
                             <i class="fa-solid fa-shuffle"></i>
                         </div>
                         <div class="cursor-pointer" id="pre-song-btn">
@@ -50,7 +51,7 @@
                             <!-- <img src="./src/assets/icons/forward.svg" alt="forward" class="w-8 h-8" /> -->
                             <i class="fa-solid fa fa-forward"></i>
                         </div>
-                        <div class="cursor-pointer text-lg text-green-400" id="loop">
+                        <div class="cursor-pointer text-lg" id="loop">
                             <i class="fa-solid fa-repeat"></i>
                         </div>
                     </div>
@@ -76,7 +77,7 @@
                     </div>
                 </div>
                 <div class="flex gap-x-3 items-center">
-                    <div><i class="fa-solid fa fa-bars"></i></div>
+                    <div id="toggle-queue-btn"><i class="fa-solid fa fa-bars"></i></div>
                     <div>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -103,12 +104,12 @@
                                 <div
                                     id="volume-process"
                                     class="absolute top-0 z-10 bg-[#48cae4] border border-[#48cae4] rounded-sm left-0"
-                                    style="width: 6%"
+                                    style="width: 100%"
                                 ></div>
                                 <div
                                     id="volume-point"
                                     class="absolute top-0 z-10 bg-[#48cae4] border border-[#48cae4] rounded-sm left-0"
-                                    style="width: 6%"
+                                    style="width: 100%"
                                 ></div>
                             </div>
                         </div>
@@ -141,7 +142,7 @@
                     <div class="nav-item gap-x-2 ml-4"><i class="fa-regular fa fa-circle-play"></i>Create new</div>
                 </div>
             </div>
-            <div class="h-screen max-h-screen overflow-hidden w-full bg-[#f8f8f8]">
+            <div class="h-screen max-h-screen overflow-hidden w-full relative bg-[#f8f8f8]">
                 <div class="overflow-y-auto -mr-[17px] box-content h-full">
                     <header class="w-full mt-3">
                         <nav class="w-full flex justify-between items-center px-4">
@@ -237,7 +238,6 @@
                                         <div class="col-span-3 text-center">Artist</div>
                                     </div>
                                     <div id="recently-added" class="flex flex-col gap-y-2"></div>
-                                    <div class="flex justify-center items-center"><div class="loader"></div></div>
                                 </div>
                             </div>
                         </div>
@@ -248,17 +248,20 @@
                                     <div class="flex text-xs items-center w-full gap-x-8 mb-2">
                                         <div class="text-[#2B2D42] text-lg">Trending now</div>
                                         <div class="flex gap-x-3 h-5">
-                                            <div
+                                            <divs
+                                                id="trending-today-tab"
                                                 class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer nav-item-active"
                                             >
                                                 Today
-                                            </div>
+                                            </divs>
                                             <div
+                                                id="trending-week-tab"
                                                 class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer"
                                             >
                                                 Week
                                             </div>
                                             <div
+                                                id="trending-month-tab"
                                                 class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer"
                                             >
                                                 Month
@@ -267,7 +270,7 @@
                                     </div>
                                     <div
                                         id="trendingsong"
-                                        class="flex flex-col gap-y-2 h-[312px] overflow-y-scroll"
+                                        class="flex flex-col gap-y-2 h-[500px] overflow-y-scroll"
                                     ></div>
                                 </div>
                             </div>
@@ -277,9 +280,18 @@
                     <div class="h-1/2"></div>
                 </div>
             </div>
-            <script src="https://unpkg.com/feather-icons"></script>
-            <script src="https://kit.fontawesome.com/2d8af150bf.js" crossorigin="anonymous"></script>
-            <script type="module" src="/src/scripts/main.ts"></script>
+            <div id="queue-view" class="absolute top-0 right-0 h-screen z-10 bg-[#f8f8f8] shadow-2xl w-0">
+                <div class="h-full overflow-y-auto p-1">
+                    <div class="font-bold text-xl">Queue</div>
+                    <div class="font-semibold text-lg">Now playing</div>
+                    <div id="now-playing-container" class="pl-2 py-2"></div>
+                    <div class="font-semibold text-lg">Next from queue</div>
+                    <div id="next-song-container" class="pl-2 py-2"></div>
+                </div>
+            </div>
         </div>
     </body>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://kit.fontawesome.com/2d8af150bf.js" crossorigin="anonymous"></script>
+    <script type="module" src="/src/scripts/main.ts"></script>
 </html>

@@ -43,10 +43,15 @@ export const favoriteArtists: IArtist[] = [
 ];
 
 let listTrack: Track[] | null = null;
-fetch("https://raw.githubusercontent.com/Mirai3103/nodeWeb1/main/generateData/songs.json")
-    .then((res) => {
-        return res.json();
-    })
-    .then((data) => {
+
+export const getListTrack = async () => {
+    if (listTrack) return listTrack;
+    else {
+        const res = await fetch("https://raw.githubusercontent.com/Mirai3103/nodeWeb1/main/generateData/songs.json");
+        const data = await res.json();
         listTrack = [...data];
-    });
+        return listTrack;
+    }
+};
+
+getListTrack();
