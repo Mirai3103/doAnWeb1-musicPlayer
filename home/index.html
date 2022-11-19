@@ -14,6 +14,11 @@
     <body class="overflow-hidden">
         <div class="w-screen h-screen flex relative" class="overflow-hidden">
             <div
+                id="context-menu"
+                class="absolute bg-[#8338ec] text-white shadow-xl rounded-xl z-50 py-2 text-sm hidden"
+                style="top: 3rem; left: 3rem"
+            ></div>
+            <div
                 class="fixed z-50 w-screen h-20 bg-[#8338ec] justify-between px-5 font-normal bottom-0 left-0 shadow-slate-400 shadow-md flex items-center text-white"
             >
                 <audio id="audio-element" src="#" hidden></audio>
@@ -133,7 +138,7 @@
                 <div class="flex flex-col gap-y-3">
                     <h2 class="uppercase my-2 text-lg text-[#909090]">Library</h2>
                     <div class="nav-item gap-x-2 ml-4"><i class="fa-light fa fa-rotate-left"></i>Recent</div>
-                    <div class="nav-item gap-x-2 ml-4"><i class="fa-light fa fa-heart"></i>Favorites</div>
+                    <div class="nav-item gap-x-2 ml-4">Favorites</div>
                     <div class="nav-item gap-x-2 ml-4"><i class="fa-light fa fa-laptop"></i>Local</div>
                 </div>
                 <div class="flex flex-col gap-y-3">
@@ -159,22 +164,22 @@
                             </ul>
                             <ul>
                                 <li
-                                    class="border-2 flex items-center font-medium text-sm rounded-full px-1 py-1 border-[#8D99AE]"
+                                    class="border-2 w-[450px] flex items-center font-medium text-sm rounded-full px-1 py-1 border-[#8D99AE]"
                                 >
                                     <i class="fa-sharp fa fa-solid fa-magnifying-glass"></i>
-                                    <input type="text" class="outline-none mx-1 bg-transparent" placeholder="search" />
+                                    <input
+                                        type="text"
+                                        class="outline-none mx-2 bg-transparent w-full"
+                                        placeholder="search"
+                                    />
                                 </li>
                             </ul>
-                            <ul class="flex justify-between basis-64">
-                                <li class="nav-item nav-item-active">Music</li>
-                                <li class="nav-item">Top charts</li>
-                                <li class="nav-item">Podcasts</li>
-                            </ul>
+
                             <ul class="flex items-center justify-between basis-64">
                                 <li class="nav-item"><i class="fa-thin fa fa-toolbox"></i></li>
                                 <li class="nav-item"><i class="fa-thin fa fa-gear"></i></li>
 
-                                <li class="nav-item flex px-3 gap-x-1">
+                                <li id="auth-btn" class="nav-item flex px-3 gap-x-1 relative">
                                     <div class="border-2 p-[2px] border-[#8338ec] rounded-full w-12 h-12">
                                         <img
                                             id="user-img"
@@ -186,102 +191,117 @@
                                     <div class="flex items-center justify-center gap-x-1">
                                         <span id="username">Hữu Hoàng</span> <i class="fa-solid fa-caret-down"></i>
                                     </div>
+                                    <div
+                                        id="user-context-menu"
+                                        class="absolute bg-[#8338ec] hidden text-white shadow-xl rounded-xl z-20 py-2 text-sm top-12 right-0"
+                                    >
+                                        <div class="p-2 flex gap-x-2 items-center hover:bg-[#8f49f2]">
+                                            <i class="fa-solid fa-heart"></i><span>Danh sách yêu thích</span>
+                                        </div>
+                                        <div id="sign-out-btn" class="p-2 flex gap-x-2 items-center hover:bg-[#8f49f2]">
+                                            <i class="fa-solid fa-right-from-bracket"></i> <span>Đăng xuất</span>
+                                        </div>
+                                    </div>
                                 </li>
                             </ul>
                         </nav>
                     </header>
-                    <div class="flex w-full justify-center mt-6 px-10 gap-x-10">
-                        <div class="w-2/3">
-                            <div class="mb-3 font-bold text-xl">What's hot</div>
-                            <div class="flex gap-x-6 flex-nowrap">
-                                <div
-                                    class="max-h-[230px] w-1/2 rounded-lg flex justify-center items-center overflow-hidden"
-                                >
-                                    <img
-                                        class="object-cover rounded-lg flex-shrink-0 min-w-full min-h-full"
-                                        src="https://photo-zmp3.zmdcdn.me/banner/e/e/d/6/eed691851e38dc0b857eaded4184c291.jpg"
-                                        alt="cover"
-                                    />
-                                </div>
-                                <div
-                                    class="max-h-[230px] w-1/2 rounded-lg flex justify-center items-center overflow-hidden"
-                                >
-                                    <img
-                                        class="object-cover rounded-lg flex-shrink-0 min-w-full min-h-full"
-                                        src="https://photo-zmp3.zmdcdn.me/banner/e/e/d/6/eed691851e38dc0b857eaded4184c291.jpg"
-                                        alt="cover"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-1/3">
-                            <div class="mb-3 font-bold text-xl">Favorite artists</div>
-                            <div class="shadow-md rounded-md">
-                                <div
-                                    id="favorite-artists"
-                                    class="bg-white flex flex-col gap-y-1 py-1 h-[220px] overflow-y-auto rounded-md"
-                                ></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex font-medium mt-10 justify-around px-10 gap-8">
-                        <div class="basis-1/2 flex flex-col gap-y-3">
-                            <div class="font-bold text-2xl">Recently added</div>
-                            <div class="shadow-md">
-                                <div
-                                    class="bg-white h-[600px] max-h-[600px] overflow-y-auto overflow-x-hidden py-6 px-5 flex flex-col gap-y-2"
-                                >
-                                    <div class="grid grid-cols-10 font-normal text-sm text-slate-600">
-                                        <div class="col-span-1 text-center"></div>
-                                        <div class="col-span-4 text-center">Title</div>
-                                        <div class="col-span-2 text-center">Time</div>
-                                        <div class="col-span-3 text-center">Artist</div>
+                    <div class="relative">
+                        <div class="flex w-full justify-center mt-6 px-10 gap-x-10">
+                            <div class="w-2/3">
+                                <div class="mb-3 font-bold text-xl">What's hot</div>
+                                <div class="flex gap-x-6 w-full overflow-x-scroll">
+                                    <div class="max-h-[230px] basis-full rounded-lg flex justify-center items-center">
+                                        <img
+                                            class="object-cover rounded-lg flex-shrink-0 min-w-full min-h-full"
+                                            src="https://photo-zmp3.zmdcdn.me/banner/3/f/3/4/3f344e76bac9617058f1f323f96cc724.jpg"
+                                            alt="cover"
+                                        />
                                     </div>
-                                    <div id="recently-added" class="flex flex-col gap-y-2"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="basis-1/2 flex flex-col gap-y-3">
-                            <div class="font-bold text-2xl">Top Trending</div>
-                            <div id="trending" class="shadow-md">
-                                <div class="bg-white h-[600px] py-6 px-5 flex flex-col gap-y-2">
-                                    <div class="flex text-xs items-center w-full gap-x-8 mb-2">
-                                        <div class="text-[#2B2D42] text-lg">Trending now</div>
-                                        <div class="flex gap-x-3 h-5">
-                                            <divs
-                                                id="trending-today-tab"
-                                                class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer nav-item-active"
-                                            >
-                                                Today
-                                            </divs>
-                                            <div
-                                                id="trending-week-tab"
-                                                class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer"
-                                            >
-                                                Week
-                                            </div>
-                                            <div
-                                                id="trending-month-tab"
-                                                class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer"
-                                            >
-                                                Month
-                                            </div>
-                                        </div>
-                                    </div>
+
                                     <div
-                                        id="trendingsong"
-                                        class="flex flex-col gap-y-2 h-[500px] overflow-y-scroll"
+                                        class="max-h-[230px] min-h-[230px] basis-full rounded-lg flex justify-center items-center overflow-hidden"
+                                    >
+                                        <img
+                                            class="object-cover rounded-lg flex-shrink-0 min-w-full min-h-full"
+                                            src="https://photo-zmp3.zmdcdn.me/banner/e/e/d/6/eed691851e38dc0b857eaded4184c291.jpg"
+                                            alt="cover"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-1/3">
+                                <div class="mb-3 font-bold text-xl">Favorite artists</div>
+                                <div class="shadow-md rounded-md">
+                                    <div
+                                        id="favorite-artists"
+                                        class="bg-white flex flex-col gap-y-1 py-1 h-[220px] overflow-y-auto rounded-md"
                                     ></div>
                                 </div>
                             </div>
                         </div>
+                        <div class="flex font-medium mt-10 justify-around px-10 gap-8">
+                            <div class="basis-1/2 flex flex-col gap-y-3">
+                                <div class="font-bold text-2xl">Recently added</div>
+                                <div class="shadow-md">
+                                    <div
+                                        class="bg-white h-[600px] max-h-[600px] overflow-y-auto overflow-x-hidden py-6 px-5 flex flex-col gap-y-2"
+                                    >
+                                        <div class="grid grid-cols-10 font-normal text-sm text-slate-600">
+                                            <div class="col-span-1 text-center"></div>
+                                            <div class="col-span-4 text-center">Title</div>
+                                            <div class="col-span-2 text-center">Time</div>
+                                            <div class="col-span-3 text-center">Artist</div>
+                                        </div>
+                                        <div id="recently-added" class="flex flex-col gap-y-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="basis-1/2 flex flex-col gap-y-3">
+                                <div class="font-bold text-2xl">Top Trending</div>
+                                <div id="trending" class="shadow-md">
+                                    <div class="bg-white h-[600px] py-6 px-5 flex flex-col gap-y-2">
+                                        <div class="flex text-xs items-center w-full gap-x-8 mb-2">
+                                            <div class="text-[#2B2D42] text-lg">Trending now</div>
+                                            <div class="flex gap-x-3 h-5">
+                                                <divs
+                                                    id="trending-today-tab"
+                                                    class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer nav-item-active"
+                                                >
+                                                    Today
+                                                </divs>
+                                                <div
+                                                    id="trending-week-tab"
+                                                    class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer"
+                                                >
+                                                    Week
+                                                </div>
+                                                <div
+                                                    id="trending-month-tab"
+                                                    class="bg-[#f8f8f8] rounded-2xl px-4 nav-item justify-center cursor-pointer"
+                                                >
+                                                    Month
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            id="trendingsong"
+                                            class="flex flex-col gap-y-2 h-[500px] overflow-y-scroll"
+                                        ></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-1/2"></div>
+                        <div
+                            id="other-page"
+                            class="absolute top-0 right-0 h-full z-10 bg-[#f8f8f8] shadow-2xl w-full"
+                        ></div>
                     </div>
-                    <div class="h-1/2"></div>
-                    <div class="h-1/2"></div>
                 </div>
             </div>
-            <div id="queue-view" class="absolute top-0 right-0 h-screen z-10 bg-[#f8f8f8] shadow-2xl w-0">
-                <div class="h-full overflow-y-auto p-1">
+            <div id="queue-view" class="absolute top-0 right-0 h-screen z-20 bg-[#f8f8f8] shadow-2xl w-0">
+                <div class="h-full overflow-y-auto p-2">
                     <div class="font-bold text-xl">Queue</div>
                     <div class="font-semibold text-lg">Now playing</div>
                     <div id="now-playing-container" class="pl-2 py-2"></div>

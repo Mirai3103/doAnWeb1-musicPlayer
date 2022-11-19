@@ -1,3 +1,4 @@
+import { openContextMenu } from "./songContextMenu";
 import AudioPlayer, { Track } from "./AudioPlayer";
 import { getListTrack } from "./data";
 import { createElementFromHTML, formatNumber, covertTime } from "./utils";
@@ -6,6 +7,7 @@ let audioPlayerOld: AudioPlayer | null = null;
 const trendingTodayTab = document.getElementById("trending-today-tab")!;
 const trendingWeekTab = document.getElementById("trending-week-tab")!;
 const trendingMonthTab = document.getElementById("trending-month-tab")!;
+import { isFavorite, toggleFavorite } from "./auth";
 const handleSongClick = async (songId: string, audioPlayer: AudioPlayer) => {
     if (songId === audioPlayer.getCurrentTrack().id + "") {
         audioPlayer.togglePlay();
@@ -18,6 +20,14 @@ const handleSongClick = async (songId: string, audioPlayer: AudioPlayer) => {
         audioPlayer.setTrack(song);
     }
 };
+interface ICached {
+    [key: string]: Track[];
+}
+let cachedTrending: ICached = {
+    today: [],
+    week: [],
+    month: [],
+};
 const renderTrendingSong = async (time: string | null = null, audioPlayer: AudioPlayer | null = null) => {
     const trendingSongContainer = document.querySelector("#trendingsong");
     if (audioPlayer) {
@@ -27,9 +37,6 @@ const renderTrendingSong = async (time: string | null = null, audioPlayer: Audio
     }
     trendingSongContainer!.innerHTML = `<div class="flex justify-center items-center"><div class="loader"></div></div>`;
     if (time) {
-        if (currentTimeState === time) {
-            return;
-        }
         currentTimeState = time;
     } else {
         time = currentTimeState;
@@ -48,8 +55,9 @@ const renderTrendingSong = async (time: string | null = null, audioPlayer: Audio
         default:
             return;
     }
-    const res = await fetch(url);
-    const songs: Track[] = await res.json();
+    const songs: Track[] =
+        cachedTrending[time].length > 0 ? [...cachedTrending[time]] : await (await fetch(url)).json();
+    console.log("ok");
 
     trendingSongContainer!.innerHTML = "";
     let currentTrackId: string | null = null;
@@ -57,6 +65,7 @@ const renderTrendingSong = async (time: string | null = null, audioPlayer: Audio
         currentTrackId = audioPlayer.getCurrentTrack().id + "";
     }
     songs.forEach((song, index) => {
+        const isFavoriteSong = isFavorite(song.id + "");
         const htmlString = `<div songId="${song.id}" class="grid grid-cols-8 font-normal text-sm hover:text-[#8338ec] ${
             currentTrackId === song.id ? "bg-slate-50 text-[#8338ec]" : ""
         } hover:bg-slate-50 py-1 cursor-pointer"
@@ -72,7 +81,9 @@ const renderTrendingSong = async (time: string | null = null, audioPlayer: Audio
                                                         </div>`
                                                     : formatNumber(index + 1, 2)
                                             }</div>
-                                            <div class="col-span-3 flex items-center gap-x-4 px-2">
+                                            <abbr title="${
+                                                song.name
+                                            }" class="col-span-3 flex items-center gap-x-4 px-2 play-song-btn">
                                                 <div
                                                     class="min-w-[40px] max-w-[40px] h-full flex justify-center items-center overflow-hidden"
                                                 >
@@ -88,7 +99,7 @@ const renderTrendingSong = async (time: string | null = null, audioPlayer: Audio
                                                     <span>${song.name}</span>
                                                     <span class="text-xs font-light">${song.artistName}</span>
                                                 </div>
-                                            </div>
+                                            </abbr>
                                             <div class="col-span-1 grid place-content-center">${covertTime(
                                                 song.totalTime
                                             )}</div>
@@ -99,9 +110,13 @@ const renderTrendingSong = async (time: string | null = null, audioPlayer: Audio
                                                         : "fa-play"
                                                 }"></i>
                                             </div>
-                                            <div class="col-span-1 grid place-content-center">
-                                                <i class="fa-regular fa-heart"></i>
-                                            </div>
+                                            <abbr title="Add to your favorite" class="add-favorite-btn col-span-1 grid place-content-center hover:text-red-500">
+                                               ${
+                                                   isFavoriteSong
+                                                       ? `<i class="fa-solid fa-heart"></i>`
+                                                       : `<i class="fa-regular fa-heart"></i>`
+                                               }
+                                            </abbr>
                                             <div class="col-span-1 grid place-content-center">
                                                <a href="${
                                                    song.url
@@ -110,10 +125,19 @@ const renderTrendingSong = async (time: string | null = null, audioPlayer: Audio
                                         </div>
                                         `;
         const element = createElementFromHTML(htmlString)!;
-        element.addEventListener("click", (e) => {
-            const songId = (e.currentTarget as HTMLElement).getAttribute("songId")!;
-            handleSongClick(songId, audioPlayer as AudioPlayer);
+
+        (element as HTMLElement).querySelector(".play-song-btn")!.addEventListener("click", (e) => {
+            handleSongClick(song.id + "", audioPlayer as AudioPlayer);
         });
+        (element as HTMLElement).querySelector(".add-favorite-btn")!.addEventListener("click", (e) => {
+            toggleFavorite(song.id + "");
+            renderTrendingSong(time, audioPlayer);
+        });
+        element.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            openContextMenu(e as MouseEvent, song.id + "");
+        });
+
         trendingSongContainer!.appendChild(element);
     });
 };

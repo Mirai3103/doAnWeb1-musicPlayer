@@ -55,3 +55,6 @@ export const getListTrack = async () => {
 };
 
 getListTrack();
+export const getTrackById = async (id: string) => {
+    return (await getListTrack()).find((track) => track.id === id);
+};

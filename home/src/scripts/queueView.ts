@@ -102,4 +102,7 @@ export const initQueueView = (audioPlayer: AudioPlayer) => {
     audioPlayer.onTrackStart(() => {
         renderQueueView(audioPlayer);
     });
+    audioPlayer.addOnQueueChange(() => {
+        renderQueueView(audioPlayer);
+    });
 };

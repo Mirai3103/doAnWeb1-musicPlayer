@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 @layer components {
+    abbr[title] {
+        text-decoration: none;
+    }
     body {
         font-family: "Nunito", sans-serif;
     }

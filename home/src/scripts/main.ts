@@ -1,17 +1,13 @@
+import { signOut } from "./auth";
 import { renderTrendingSong } from "./trendingSong";
 import "../styles/tailwind.css";
 import "./favoriteAtists";
 import { createElementFromHTML, covertTime, formatNumber } from "./utils";
-import AudioPlayer, { Track } from "./AudioPlayer";
+import AudioPlayer, { Track, audioPlayer } from "./AudioPlayer";
 import { getListTrack } from "./data";
 import { initQueueView } from "./queueView";
 
-const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null;
-if (user) {
-    document.getElementById("user-img")!.setAttribute("src", user.avatar);
-    document.getElementById("username")!.innerHTML = user.username;
-}
-
+document.getElementById("sign-out-btn")!.addEventListener("click", signOut);
 const recentlyAddedElement = document.getElementById("recently-added")!;
 const handleSongClick = async (songId: string) => {
     const songs = await getListTrack();
@@ -78,7 +74,6 @@ const renderRecentlyAdded = async (audioPlayer: AudioPlayer | null = null) => {
     }
 };
 
-const audioElement = document.getElementById("audio-element") as HTMLAudioElement;
 const playBtn = document.getElementById("play-btn") as HTMLButtonElement;
 const preSongBtn = document.getElementById("pre-song-btn") as HTMLButtonElement;
 const nextSongBtn = document.getElementById("next-song-btn") as HTMLButtonElement;
@@ -90,7 +85,6 @@ const shuffleBtn = document.getElementById("shuffle") as HTMLButtonElement;
 const currentPlayImg = document.getElementById("current-play-img") as HTMLImageElement;
 const currentSongName = document.getElementById("current-song-name") as HTMLDivElement;
 const currentArtistName = document.getElementById("current-artist-name") as HTMLDivElement;
-const audioPlayer = new AudioPlayer(audioElement);
 const pauseIcon = `<i class="fa-solid fa-pause"></i>`;
 const playIcon = `<i class="fa-solid fa-play"></i>`;
 const handleTogglePlay = () => {
@@ -158,15 +152,13 @@ audioPlayer.onTrackPlaying(movePointOnPlaying);
 audioPlayer.onTrackPlaying(hanldeTimeUpdate);
 audioPlayer.onTrackStart(onPlay);
 audioPlayer.addTrack({
-    id: "ZZB8DB9U",
-    name: "Way Back Home",
-    url: "https://mp3-s1-m-zmp3.zmdcdn.me/313ca1e23ea3d7fd8eb2/8116631274261275645?authen=exp=1668776756~acl=/313ca1e23ea3d7fd8eb2/*~hmac=f81e00f88db4dccc5bab472e09c898c1",
-    artistName: "B Ray, Phạm Vi",
-    thumbnailUrl:
-        "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/avatars/c/0/0/3/c00368f9a16eefbedf836821ba6fab36.jpg",
-    artistImgUrl:
-        "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/6/5/1/9/651942a9fe205c76b3821246af5d6742.jpg",
-    totalTime: 183824,
+    id: "ZZB8D39U",
+    name: "Childhood Dream",
+    url: "https://res.cloudinary.com/dkvga054t/video/upload/v1668262706/mp3/Childhood_dream_-_Seraphine_wjyqxx.mp3",
+    artistName: "Seraphine",
+    thumbnailUrl: "https://res.cloudinary.com/dkvga054t/image/upload/v1668262394/songImage/serapine_qvdyqb.jpg",
+    artistImgUrl: "https://res.cloudinary.com/dkvga054t/image/upload/v1668262394/songImage/serapine_qvdyqb.jpg",
+    totalTime: 164000,
 });
 
 const volumeBar = document.getElementById("volume-bar") as HTMLDivElement;
@@ -187,3 +179,21 @@ volumePoint.addEventListener("click", onVolumeBarClick);
 renderRecentlyAdded();
 renderTrendingSong(null, audioPlayer);
 initQueueView(audioPlayer);
+
+document.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+});
+
+if (window.location.hash.includes("signin")) {
+    window.location.hash = "";
+}
+// const handleHandleHashChange = () => {
+//     const hash = window.location.hash.replace("#", "");
+//     switch (hash) {
+//         case "signin":
+//             document.getElementById("signin")!.classList.remove("hidden");
+//             case
+// }
+import FavoritePage from "./pages/favorivePage";
+const favoritePage = new FavoritePage(document.getElementById("other-page")!);
+favoritePage.render();

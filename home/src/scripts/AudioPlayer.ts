@@ -47,6 +47,7 @@ export default class AudioPlayer {
     private trackPauseEvent: ((e: Event) => void)[] = [];
     private trackStartEvent: ((e: Event) => void)[] = [];
     private trackPlayingEvent: ((e: Event) => void)[] = [];
+    private queueChangeCallBack: ((e: AudioPlayer) => void)[] = [];
     constructor(audio: HTMLAudioElement) {
         this.audio = audio;
 
@@ -118,7 +119,14 @@ export default class AudioPlayer {
         this.audio.pause();
         this.isPlaying = false;
     }
-
+    public addOnQueueChange(callback: (e: AudioPlayer) => void) {
+        this.queueChangeCallBack.push(callback);
+    }
+    private onQueueChange() {
+        this.queueChangeCallBack.forEach((callback) => {
+            callback(this);
+        });
+    }
     public stop() {
         this.audio.pause();
         this.audio.currentTime = 0;
@@ -180,6 +188,7 @@ export default class AudioPlayer {
     }
     public addTrack(track: Track) {
         this.trackList.push(track);
+        this.onQueueChange();
     }
 
     public getCurrentTrack() {
@@ -213,3 +222,6 @@ export default class AudioPlayer {
         this.trackPlayingEvent.push(callback);
     }
 }
+const audioElement = document.getElementById("audio-element") as HTMLAudioElement;
+
+export const audioPlayer = new AudioPlayer(audioElement);

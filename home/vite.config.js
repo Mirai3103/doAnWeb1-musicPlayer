@@ -6,5 +6,7 @@ export default defineConfig({
     },
     build: {
         minify: false,
+        outDir: "E:/ProgramFiles/laragon/www/",
+        assetsDir: ".",
     },
 });
