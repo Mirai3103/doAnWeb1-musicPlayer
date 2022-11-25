@@ -1,3 +1,6 @@
+import { audioPlayer } from "./AudioPlayer";
+import { getListTrack } from "./data";
+
 export const createElementFromHTML = (htmlString: string) => {
     const div = document.createElement("div");
     div.innerHTML = htmlString.trim();
@@ -55,4 +58,21 @@ export const formatNumber = (num: number, numberOfMaxDigit: number) => {
         str = "0" + str;
     }
     return str;
+};
+export const removeAllEventListeners = (element: Element) => {
+    const newEl = element.cloneNode(true);
+    element.parentNode?.replaceChild(newEl, element);
+};
+
+export const removeAllEventListenersOfList = (list: NodeListOf<Element>) => {
+    list.forEach((element) => {
+        removeAllEventListeners(element);
+    });
+};
+export const handleSongClick = async (songId: string) => {
+    const songs = await getListTrack();
+    const song = songs.find((song) => song.id == songId);
+    if (song) {
+        audioPlayer.setTrack(song);
+    }
 };

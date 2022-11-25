@@ -1,6 +1,7 @@
 import { createElementFromHTML } from "./utils";
 import { getTrackById } from "./data";
 import { audioPlayer } from "./AudioPlayer";
+import { isFavorite, toggleFavorite } from "./auth";
 const contextMenu = document.getElementById("context-menu")!;
 
 const closeContextMenu = () => {
@@ -57,6 +58,7 @@ const renderContextMenu = async (songId: string) => {
     }
     const contextMenu = document.getElementById("context-menu")!;
     contextMenu.innerHTML = "";
+    const isfavorite = await isFavorite(songId);
     const element = createElementFromHTML(`
     <div>
     <div class="px-2 flex gap-x-2 items-center border-b pb-2">
@@ -70,8 +72,12 @@ const renderContextMenu = async (songId: string) => {
         <div class="font-bold">${song.name}</div>
     </div>
     <div class="flex flex-col py-2">
-        <div class="p-2 py-4 flex gap-x-2 items-cente hover:bg-[#8f49f2] cursor-pointer">
-            <i class="fa-light fa fa-heart"></i> <span>Thêm vào yêu thích</span>
+        <div class="p-2 py-4 flex gap-x-2 items-cente hover:bg-[#8f49f2] cursor-pointer toggle-favorive">
+            ${
+                isfavorite
+                    ? `<i class="fa-solid fa fa-heart"></i> <span>Xoá khỏi yêu thích</span>`
+                    : `<i class="fa-regular fa-heart"></i> <span>Thêm vào yêu thích</span>`
+            } 
         </div>
         <div class="p-2 py-4 flex gap-x-2 items-center hover:bg-[#8f49f2] cursor-pointer add-to-queue">
             <i class="fa-solid fa-plus"></i><span>Thêm vào danh sách phát</span>
@@ -84,6 +90,10 @@ const renderContextMenu = async (songId: string) => {
     contextMenu.appendChild(element);
     (element as HTMLElement).querySelector(".add-to-queue")!.addEventListener("click", () => {
         audioPlayer.addTrack(song);
+        closeContextMenu();
+    });
+    (element as HTMLElement).querySelector(".toggle-favorive")!.addEventListener("click", () => {
+        toggleFavorite(songId);
         closeContextMenu();
     });
 

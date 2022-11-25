@@ -1,21 +1,24 @@
-import { signOut } from "./auth";
+import { favoriteSongs, signOut, toggleFavorite } from "./auth";
 import { renderTrendingSong } from "./trendingSong";
 import "../styles/tailwind.css";
 import "./favoriteAtists";
-import { createElementFromHTML, covertTime, formatNumber } from "./utils";
+import {
+    createElementFromHTML,
+    covertTime,
+    formatNumber,
+    removeAllEventListenersOfList,
+    handleSongClick,
+} from "./utils";
 import AudioPlayer, { Track, audioPlayer } from "./AudioPlayer";
-import { getListTrack } from "./data";
+import { favoriteArtists, getListTrack } from "./data";
 import { initQueueView } from "./queueView";
+import AlbumPage from "./pages/AlbumPage";
+
+const hashHistory = [];
+const hashNext = [];
 
 document.getElementById("sign-out-btn")!.addEventListener("click", signOut);
 const recentlyAddedElement = document.getElementById("recently-added")!;
-const handleSongClick = async (songId: string) => {
-    const songs = await getListTrack();
-    const song = songs.find((song) => song.id == songId);
-    if (song) {
-        audioPlayer.setTrack(song);
-    }
-};
 let recentSongs: Track[] | null = null;
 const renderRecentlyAdded = async (audioPlayer: AudioPlayer | null = null) => {
     recentlyAddedElement.innerHTML = `<div class="flex justify-center items-center"><div class="loader"></div></div>`;
@@ -69,6 +72,10 @@ const renderRecentlyAdded = async (audioPlayer: AudioPlayer | null = null) => {
         `);
         songElement!.addEventListener("click", () => {
             handleSongClick(song.id + "");
+        });
+        songElement!.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            openContextMenu(e as MouseEvent, song.id + "");
         });
         recentlyAddedElement.appendChild(songElement!);
     }
@@ -152,14 +159,17 @@ audioPlayer.onTrackPlaying(movePointOnPlaying);
 audioPlayer.onTrackPlaying(hanldeTimeUpdate);
 audioPlayer.onTrackStart(onPlay);
 audioPlayer.addTrack({
-    id: "ZZB8D39U",
-    name: "Childhood Dream",
-    url: "https://res.cloudinary.com/dkvga054t/video/upload/v1668262706/mp3/Childhood_dream_-_Seraphine_wjyqxx.mp3",
-    artistName: "Seraphine",
-    thumbnailUrl: "https://res.cloudinary.com/dkvga054t/image/upload/v1668262394/songImage/serapine_qvdyqb.jpg",
-    artistImgUrl: "https://res.cloudinary.com/dkvga054t/image/upload/v1668262394/songImage/serapine_qvdyqb.jpg",
-    totalTime: 164000,
+    id: "ZW9AZC68",
+    name: "Có Chàng Trai Viết Lên Cây",
+    url: "https://res.cloudinary.com/dkvga054t/video/upload/v1668843811/songs/2675035284037628448.mp3",
+    artistName: "Phan Mạnh Quỳnh",
+    thumbnailUrl:
+        "https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_jpeg/covers/f/f/ffd96dc18d252825cb591e255ddc6dbd_1513860881.jpg",
+    artistImgUrl:
+        "https://photo-resize-zmp3.zmdcdn.me/w360_r1x1_jpeg/avatars/1/6/a/d/16ad38a571e873f840bbfc0d97214baa.jpg",
+    totalTime: 310008,
 });
+initQueueView(audioPlayer);
 
 const volumeBar = document.getElementById("volume-bar") as HTMLDivElement;
 const volumeBarLine = document.getElementById("volume-bar-line") as HTMLDivElement;
@@ -178,7 +188,6 @@ volumeProcess.addEventListener("click", onVolumeBarClick);
 volumePoint.addEventListener("click", onVolumeBarClick);
 renderRecentlyAdded();
 renderTrendingSong(null, audioPlayer);
-initQueueView(audioPlayer);
 
 document.addEventListener("contextmenu", (e) => {
     e.preventDefault();
@@ -194,6 +203,66 @@ if (window.location.hash.includes("signin")) {
 //             document.getElementById("signin")!.classList.remove("hidden");
 //             case
 // }
-import FavoritePage from "./pages/favorivePage";
-const favoritePage = new FavoritePage(document.getElementById("other-page")!);
-favoritePage.render();
+import { openContextMenu } from "./songContextMenu";
+import { IAlbum } from "./pages/Album";
+
+const handleHashChange = async (e: HashChangeEvent | null) => {
+    const hash = window.location.hash;
+    const page = hash.split("?")[0];
+    switch (page) {
+        case "#favorite": {
+            const album: IAlbum = {
+                imageCover:
+                    "https://res.cloudinary.com/dkvga054t/image/upload/v1669367712/pngtree-vinyl-line-icon-heart-record-png-image_8230774-removebg-preview_haoqpu.png",
+                listTracks: [...favoriteSongs],
+                name: "Favorite song",
+            };
+            const favoritePage = new AlbumPage(document.getElementById("other-page")!, album);
+
+            favoritePage.render();
+            document.getElementById("other-page")?.classList.remove("hidden");
+            break;
+        }
+        case "#album": {
+            if (hash.split("?").length < 2) {
+                window.location.hash = "#";
+                return;
+            }
+            const queryParam = new URLSearchParams(hash.split("?")[1]);
+        }
+        case "#artist": {
+            if (hash.split("?").length < 2) {
+                window.location.hash = "#";
+                return;
+            }
+            const queryParam = new URLSearchParams(hash.split("?")[1]);
+            const artistId = queryParam.get("id");
+            const artist = favoriteArtists.find((a) => a.id === artistId);
+            console.log(artist);
+            if (!artist) {
+                window.location.hash = "#";
+                return;
+            }
+            const listSongOfArtist = (await getListTrack())
+                .filter((t) => t.artistName.toLowerCase().includes(artist.name.toLowerCase()))
+                .map((t) => t.id + "");
+            const album: IAlbum = {
+                imageCover: artist.url,
+                listTracks: listSongOfArtist,
+                name: artist.name,
+            };
+            const artistPage = new AlbumPage(document.getElementById("other-page")!, album);
+            artistPage.render();
+            document.getElementById("other-page")?.classList.remove("hidden");
+            break;
+        }
+        default: {
+            document.getElementById("other-page")?.classList.add("hidden");
+        }
+    }
+    //scroll to top
+    document.getElementById("r-view")!.scrollTo(0, 0);
+};
+
+handleHashChange(null);
+window.addEventListener("hashchange", handleHashChange);

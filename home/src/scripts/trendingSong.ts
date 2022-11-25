@@ -103,7 +103,7 @@ const renderTrendingSong = async (time: string | null = null, audioPlayer: Audio
                                             <div class="col-span-1 grid place-content-center">${covertTime(
                                                 song.totalTime
                                             )}</div>
-                                            <div class="col-span-1 grid place-content-center">
+                                            <div class="col-span-1 grid place-content-center ">
                                                 <i class="fa-solid ${
                                                     currentTrackId === song.id && audioPlayer?.isPlaying
                                                         ? "fa-pause"

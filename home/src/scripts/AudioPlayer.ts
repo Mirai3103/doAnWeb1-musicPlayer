@@ -60,6 +60,16 @@ export default class AudioPlayer {
     public getRemainingTracks() {
         return this.trackList.slice(this.currentTrackIndex + 1);
     }
+    public setIndex(index: number) {
+        this.currentTrackIndex = index;
+    }
+    public getIndexOfTrack(trackId: number | string) {
+        return this.trackList.findIndex((track) => track.id === trackId);
+    }
+    public reloadSource() {
+        this.audio.src = this.getCurrentTrack().url;
+        this.audio.load();
+    }
     private initEvent() {
         this.audio.addEventListener("ended", (e) => {
             this.trackEndEvent.forEach((callback) => {
@@ -157,7 +167,10 @@ export default class AudioPlayer {
     }
 
     public setTrackList(trackList: Track[]) {
-        this.trackList = trackList;
+        this.trackList = [...trackList];
+        this.currentTrackIndex = 0;
+        this.reloadSource();
+        this.play();
     }
 
     public moveToNextTrack() {
@@ -187,6 +200,11 @@ export default class AudioPlayer {
         }
     }
     public addTrack(track: Track) {
+        for (let i = 0; i < this.trackList.length; i++) {
+            if (this.trackList[i].id == track.id) {
+                return;
+            }
+        }
         this.trackList.push(track);
         this.onQueueChange();
     }
@@ -220,6 +238,12 @@ export default class AudioPlayer {
     }
     public onTrackPlaying(callback: (e: Event) => void) {
         this.trackPlayingEvent.push(callback);
+    }
+    public removeEvent(callback: (e: Event) => void) {
+        this.trackEndEvent = this.trackEndEvent.filter((c) => c !== callback);
+        this.trackPauseEvent = this.trackPauseEvent.filter((c) => c !== callback);
+        this.trackStartEvent = this.trackStartEvent.filter((c) => c !== callback);
+        this.trackPlayingEvent = this.trackPlayingEvent.filter((c) => c !== callback);
     }
 }
 const audioElement = document.getElementById("audio-element") as HTMLAudioElement;

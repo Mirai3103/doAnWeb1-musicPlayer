@@ -187,3 +187,29 @@
 .has-wave {
     position: relative;
 }
+.tabs {
+    display: flex;
+    border: 1px solid #6a5af9;
+}
+
+.tabs .tab-item:not(:first-child) {
+    border-left: 1px solid #6a5af9;
+}
+
+.tabs .tab-item.active {
+    color: white;
+    background-color: #6a5af9;
+}
+
+.tabs .tab-item {
+    white-space: nowrap;
+    padding: 10px 15px;
+    cursor: pointer;
+    color: #6a5af9;
+    font-weight: 500;
+    max-width: 50%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

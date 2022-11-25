@@ -24,7 +24,9 @@ favoriteArtists.forEach((artist) => {
                                         <div class="font-bold text-3xl">...</div>
                                     </div>
     `);
+    artistElement!.addEventListener("click", () => {
+        window.location.hash = "#artist?id=" + artist.id.trim();
+    });
     favoriteArtistsElement.appendChild(artistElement!);
 });
-
 export {};
