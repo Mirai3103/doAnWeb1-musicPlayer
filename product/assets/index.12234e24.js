@@ -1,37 +1,3 @@
-// (function polyfill() {
-//     const relList = document.createElement("link").relList;
-//     if (relList && relList.supports && relList.supports("modulepreload")) {
-//         return;
-//     }
-//     for (const link of document.querySelectorAll('link[rel="modulepreload"]')) {
-//         processPreload(link);
-//     }
-//     new MutationObserver((mutations) => {
-//         for (const mutation of mutations) {
-//             if (mutation.type !== "childList") {
-//                 continue;
-//             }
-//             for (const node of mutation.addedNodes) {
-//                 if (node.tagName === "LINK" && node.rel === "modulepreload") processPreload(node);
-//             }
-//         }
-//     }).observe(document, { childList: true, subtree: true });
-//     function getFetchOpts(script) {
-//         const fetchOpts = {};
-//         if (script.integrity) fetchOpts.integrity = script.integrity;
-//         if (script.referrerpolicy) fetchOpts.referrerPolicy = script.referrerpolicy;
-//         if (script.crossorigin === "use-credentials") fetchOpts.credentials = "include";
-//         else if (script.crossorigin === "anonymous") fetchOpts.credentials = "omit";
-//         else fetchOpts.credentials = "same-origin";
-//         return fetchOpts;
-//     }
-//     function processPreload(link) {
-//         if (link.ep) return;
-//         link.ep = true;
-//         const fetchOpts = getFetchOpts(link);
-//         fetch(link.href, fetchOpts);
-//     }
-// })();
 const tailwind = "";
 const facebookIcon = "./assets/facebook_480px.1db20559.png";
 const googleIcon = "./assets/google_480px.708fe9b3.png";
@@ -168,6 +134,7 @@ const handleSignIn = (e) => {
     }
     createToast("Login success", ToastType.SUCCESS);
     localStorage.setItem("user", JSON.stringify(user));
+    window.location.pathname = "";
 };
 const handleForcus = (e) => {
     var _a;
@@ -247,10 +214,10 @@ const renderSignUp = () => {
 };
 const handleHashChange = () => {
     const hash = window.location.hash.substring(1);
-    if (hash === "signin" || hash === "") {
-        renderSignIn();
-    } else if (hash === "signup") {
+    if (hash === "signup") {
         renderSignUp();
+    } else {
+        renderSignIn();
     }
 };
 var ToastType = /* @__PURE__ */ ((ToastType2) => {
