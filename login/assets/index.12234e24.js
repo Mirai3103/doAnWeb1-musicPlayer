@@ -134,7 +134,7 @@ const handleSignIn = (e) => {
     }
     createToast("Login success", ToastType.SUCCESS);
     localStorage.setItem("user", JSON.stringify(user));
-    window.location.pathname = "";
+    window.location.pathname = "/nodeWeb1";
 };
 const handleForcus = (e) => {
     var _a;
