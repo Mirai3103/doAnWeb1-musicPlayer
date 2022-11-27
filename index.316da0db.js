@@ -249,7 +249,7 @@ const audioElement = document.getElementById("audio-element");
 const audioPlayer = new AudioPlayer(audioElement);
 const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
 if (!user) {
-    window.location.pathname = "/nodeWeb1/login";
+    window.location.pathname = LOGIN_PATH;
 }
 if (user) {
     document.getElementById("user-img").setAttribute("src", user.avatar);
@@ -282,7 +282,7 @@ const isFavorite = (songId) => {
 };
 const signOut = () => {
     localStorage.removeItem("user");
-    window.location.pathname = "/nodeWeb1/login";
+    window.location.pathname = LOGIN_PATH;
 };
 const userContextMenu = document.getElementById("user-context-menu");
 const openUserContextMenu = () => {

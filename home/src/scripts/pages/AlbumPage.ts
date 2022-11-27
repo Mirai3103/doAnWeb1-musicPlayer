@@ -7,7 +7,7 @@ import { openContextMenu } from "../songContextMenu";
 
 export default class Album extends BaseComponent {
     public name: string = "AlbumPage";
-    public album: IAlbum;
+    private album: IAlbum;
     public constructor(private container: HTMLElement, album: IAlbum) {
         super();
         this.album = album;
